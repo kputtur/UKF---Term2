@@ -30,7 +30,7 @@ Plot overlay of ground truth, sensor measurements and estimate position
 Accuracy is within limits for the data set.
 
 RMSE DataSet 1:
-| Variable        | Values
+| Variable        | Values      |
 | ------------- |:-------------:|
 | X      | right-aligned |
 | Y      | centered      | 
@@ -38,7 +38,7 @@ RMSE DataSet 1:
 | Vy | are neat      |    
 
 RMSE DataSet 2:
-| Variable        | Values
+| Variable        | Values      |
 | ------------- |:-------------:|
 | X      | right-aligned |
 | Y      | centered      | 
