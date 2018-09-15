@@ -1,0 +1,176 @@
+12d11
+<  * This is scaffolding, do not modify
+28,29c27
+<   // I experiemented with various values, finally settling to 1 here.
+<   // experimented values 30 - 20, 10, 5, 2, 1.
+---
+>   // ***** Can be tuned *****
+32,33c30,31
+<   // Process noise standard deviation yaw acceleration in rad/s^2, can be tuned
+<   // in the range of 0.3 to 30. but I will settle for 0.5 radians
+---
+>   // Process noise standard deviation yaw acceleration in rad/s^2
+>   // ***** Can be tuned *****
+35,36c33
+<   
+<   //DO NOT MODIFY measurement noise values below these are provided by the sensor manufacturer.
+---
+> 
+51,54d47
+<   //DO NOT MODIFY measurement noise values above these are provided by the sensor manufacturer.
+<   
+<   /**
+<   DONE:
+56,61c49
+<   Complete the initialization. See ukf.h for other member properties.
+< 
+<   Hint: one or more values initialized above might be wildly off...
+<   */
+< 
+<  // initially set to false, set to true in first call of ProcessMeasurement
+---
+>   // Not initialized until first process measurement
+63,67c51,55
+<  
+<  // state dimension 
+<    n_x_ =  5;
+< 
+<  //Augumented State dimension
+---
+>   
+>   // Set state dimension
+>   n_x_ = 5;
+>   
+>   // Set augmented dimension
+69,79c57,64
+< 
+< 
+<  // Matrix to hold sigma points
+<   Xsig_pred_ = MatrixXd(n_x_, 2* n_aug_ + 1);
+< 
+< 
+<  //Define spreading parameter
+<  lambda_ = 0;
+< 
+< 
+<  //weights of sigma points
+---
+>   
+>   // Define spreading parameter
+>   lambda_ = 0;
+>   
+>   // Matrix to hold sigma points
+>   Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1);
+>   
+>   // Vector for weights
+81,82c66,67
+<  
+< //start time
+---
+>   
+>   // Start time
+84,88c69,73
+< 
+< //Initialize NIS to zero
+<  NIS_radar_ = 0; 
+<  NIS_laser_ = 0;
+< 
+---
+>   
+>   // Set NIS
+>   NIS_radar_ = 0;
+>   NIS_laser_ = 0;
+>   
+98,105d82
+<   /**
+<   DONE:
+< 
+<   Complete this function! Make sure you switch between lidar and radar
+<   measurements.
+<   */
+< 
+<   // check if it is initalized and then proceeed.
+114c91,92
+<       //convert radar from  polar to cartesian - r * cos(angle) for x and r * sin(angle) for y
+---
+>       // polar to cartesian - r * cos(angle) for x and r * sin(angle) for y
+>       // ***** Middle value for 'v' can be tuned *****
+117a96
+>       //***** values can be tuned *****
+126c105,106
+<       x_ << meas_package.raw_measurements_(0), meas_package.raw_measurements_(1), 2, 0.5, 2.0;
+---
+>       // ***** Last three values below can be tuned *****
+>       x_ << meas_package.raw_measurements_(0), meas_package.raw_measurements_(1), 4, 0.5, 0.0;
+128a109
+>       //***** values can be tuned *****
+138,139d118
+< 
+<     // update the time stamp
+161d139
+< 
+168,175c146,147
+<   /**
+<   DONE:
+< 
+<   Complete this function! Estimate the object's location. Modify the state
+<   vector, x_. Predict sigma points, the state, and the state covariance matrix.
+<   */
+< 
+<  // Define spreading parameter
+---
+>   
+>   // Define spreading parameter
+232a205,206
+>     double px = calc_col(0);
+>     double py = calc_col(1);
+234a209
+>     double yawd = calc_col(4);
+237d211
+<     double yawd = calc_col(4);
+257a232
+>     // This portion stays the same
+295c270
+<     // angle has to be normalized 
+---
+>     //normalize angles
+313,322c288,289
+<   /**
+<   DONE:
+< 
+<   Complete this function! Use lidar data to update the belief about the object's
+<   position. Modify the state vector, x_, and covariance, P_.
+< 
+<   You'll also need to calculate the lidar NIS.
+<   */
+< 
+<  //set measurement dimension, lidar can measure px and py
+---
+>   
+>   //set measurement dimension, lidar can measure px and py
+405c372
+< 
+---
+>   
+413,422c380,381
+<   /**
+<   DONE:
+< 
+<   Complete this function! Use radar data to update the belief about the object's
+<   position. Modify the state vector, x_, and covariance, P_.
+< 
+<   You'll also need to calculate the radar NIS.
+<   */
+< 
+< //set measurement dimension, radar can measure r, phi, and r_dot
+---
+>   
+>   //set measurement dimension, radar can measure r, phi, and r_dot
+448c407
+<     //double yaw_d = state_vec(4);
+---
+>     double yaw_d = state_vec(4);
+534c493
+< 
+---
+>   

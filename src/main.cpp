@@ -38,6 +38,8 @@ int main()
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
 
+
+
   h.onMessage([&ukf,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -116,6 +118,7 @@ int main()
     	  double p_y = ukf.x_(1);
     	  double v  = ukf.x_(2);
     	  double yaw = ukf.x_(3);
+          double yawd = ukf.x_(4);
 
     	  double v1 = cos(yaw)*v;
     	  double v2 = sin(yaw)*v;
@@ -125,9 +128,43 @@ int main()
     	  estimate(2) = v1;
     	  estimate(3) = v2;
     	  
-    	  estimations.push_back(estimate);
-
+	 
+    	  ukf.vis_out_file << x_gt << "\t" ;  // p1
+	  ukf.vis_out_file << y_gt << "\t" ;  // p2
+	  ukf.vis_out_file << v << "\t" ;  
+	  ukf.vis_out_file << yaw << "\t" ;
+	  ukf.vis_out_file << yawd << "\t" ; 
+	  ukf.vis_out_file << v1 << "\t" ;  // x_ v estimate - x component
+	  ukf.vis_out_file << v2 << "\t" ;  // x_ v estimate - y component
+	  ukf.vis_out_file << vx_gt << "\t" ;  // v1_gt
+	  ukf.vis_out_file << vy_gt << "\t" ;  // v2_gt
+	  ukf.vis_out_file << ukf.NIS_lidar_ << "\t" ;
+	  ukf.vis_out_file << ukf.NIS_radar_ << "\t" ;
+	  ukf.vis_out_file << ukf.P_(0, 0) << "\t" ;
+	  ukf.vis_out_file << ukf.P_(1, 1) << "\t" ;
+	  ukf.vis_out_file << ukf.P_(2, 2) << "\t" ;
+	  ukf.vis_out_file << ukf.P_(3, 3) << "\t" ;
+	  ukf.vis_out_file << ukf.P_(4, 4) << "\n" ;
+ 
+	  estimations.push_back(estimate);
+	  
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
+	  
+
+	  //print the values of p_x, p_y, v1 and v2
+	  //printf("p_x = %lf p_y = %lf v1 = %lf  v2=%lf\n",p_x, p_y, v1, v2);
+	  //printf("x_gt = %f y_gt = %f vx_gt = %f vy_gt=%f \n", x_gt, y_gt, vx_gt, vy_gt);
+	  //cout<< "rmse_x = "<< to_string(RMSE(0))<< "rmse_y = "<< to_string(RMSE(1)) << "rmse_vx = "<< to_string(RMSE(2)) << "rmse_vy = "<< to_string(RMSE(4)) << endl;
+	  //cout<<" rmse_x = "<<RMSE(0)<< " rmse_y = "<<RMSE(1)<<" rmse_vx ="<<RMSE(2)<<" rmse_vy ="<<RMSE(3)<<endl;
+
+	  //Check if it meets or within the Rubric values
+          /*
+	  if ( RMSE(0) > 0.09 || RMSE(1) > 0.10 || RMSE(2) > 0.40 || RMSE(3) > 0.30 ) { 
+	 	cout << "rmse_x failed to meet rubric spec"<<endl;
+	 	printf("p_x = %lf p_y = %lf v1 = %lf  v2=%lf\n",p_x, p_y, v1, v2);
+		cout<<" rmse_x = "<<RMSE(0)<< " rmse_y = "<<RMSE(1)<<" rmse_vx ="<<RMSE(2)<<" rmse_vy ="<<RMSE(3)<<endl; 
+		
+		} */
 
           json msgJson;
           msgJson["estimate_x"] = p_x;
@@ -139,8 +176,50 @@ int main()
           auto msg = "42[\"estimate_marker\"," + msgJson.dump() + "]";
           // std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+	
+	  // output values to  file: obj_pose-laser-radar-ukf-output.txt
+	  /* 
+  	  ofstream out;
+  	  out.open("obj_pose-laser-radar-ukf-output.txt", ofstream::out | ofstream::app);
 	  
-        }
+          out << sensor_type << "\t";
+          out << p_x << "\t";
+          out << p_y << "\t";
+          out << v1 << "\t";
+          out << v2 << "\t";
+        //  out << px_meas << "\t";
+         // out << py_meas << "\t";
+          out << x_gt << "\t";
+          out << y_gt << "\t";
+          out << vx_gt << "\t";
+          out << vy_gt << "\t";
+          
+          // output the NIS values
+          if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
+            std::cout << "NIS Laser" << "\n";
+            std::cout << ukf.NIS_laser_ << "\n";
+            out << ukf.NIS_laser_ << "\t";
+          } else if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
+            std::cout << "NIS Radar" << "\n";
+            std::cout << ukf.NIS_radar_ << "\n";
+            out << ukf.NIS_radar_ << "\t";
+          }
+          
+          out << RMSE(0) << "\t";
+          out << RMSE(1) << "\t";
+          out << RMSE(2) << "\t";
+          out << RMSE(3) << "\t";
+          
+          out << scientific << ukf.acceleration_x_ << "\t";
+          out << scientific << ukf.acceleration_y_ << "\t";
+          out << ukf.dt_;
+          
+	  out << endl;
+          std::flush(out);
+	  out.close()
+ 	  */
+	} 
+       
       } else {
         
         std::string msg = "42[\"manual\",{}]";
@@ -185,91 +264,5 @@ int main()
     return -1;
   }
   h.run();
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
