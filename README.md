@@ -27,6 +27,8 @@ kputtur@osboxes:~/Udacity/CarND-Unscented-Kalman-Filter-Project/build$ make
 ### Accuracy
 Plot overlay of ground truth, sensor measurements and estimate position
 ![accuracy](./images/p1.png)
+
+
 Accuracy is within limits for the data set.
 
 ```
