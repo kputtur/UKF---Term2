@@ -31,15 +31,15 @@ Accuracy is within limits for the data set.
 
 RMSE DataSet 1:
 | Variable        | Values      |
-| ------------- |:-------------:|
-| X      | right-aligned |
-| Y      | centered      | 
-| VX | are neat      |    
-| Vy | are neat      |    
+| ------------- |-------------:|
+| X      |  |
+| Y      |       | 
+| VX |       |    
+| Vy |       |    
 
 RMSE DataSet 2:
 | Variable        | Values      |
-| ------------- |:-------------:|
+| ------------- |-------------:|
 | X      | right-aligned |
 | Y      | centered      | 
 | VX | are neat      |    
