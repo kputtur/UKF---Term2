@@ -31,23 +31,21 @@ Plot overlay of ground truth, sensor measurements and estimate position
 
 Accuracy is within limits for the data set.
 
-
-RMSE DataSet 1:
-| Variable        | Values      |
-| ------------- |-------------:|
-| X      |  |
-| Y      |       | 
-| VX |       |    
-| Vy |       |    
-
+RMSE Dataset 1:
 ```
-RMSE DataSet 2:
-| Variable        | Values      |
-| ------------- |-------------:|
-| X      | right-aligned |
-| Y      | centered      | 
-| VX | are neat      |    
-| Vy | are neat      |    
+X  = 0.0715
+Y  = 0.0832
+VX = 0.2050
+VY = 0.2473
+```
+Even though dataset 2 is not a requirement.
+
+RMSE Dataset 2:
+```
+X = 0.1095
+Y = 0. 0710
+VX = 0.7083
+VY = 0.4054
 ```
 Position accuracy was excellent.
 ![positional accuracy](./images/p2.png)
